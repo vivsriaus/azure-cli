@@ -87,3 +87,14 @@ register_cli_argument('lock', 'resource_provider_namespace', resource_namespace_
 register_cli_argument('lock', 'resource_type', arg_type=resource_type_type,
                       completer=get_resource_types_completion_list,)
 register_cli_argument('lock', 'resource_name', options_list=('--resource-name'), help='The name of the resource this lock applies to.')
+
+register_cli_argument('appliance create', 'rg_name', help='name of the resource group', completer=None)
+register_cli_argument('appliance create', 'name', options_list=('--name', '-n'), help='name of the new appliance', completer=None)
+register_cli_argument('appliance create', 'managed_rg_id', help='the resource group managed by the appliance')
+register_cli_argument('appliance create', 'location', help='the appliance location')
+register_cli_argument('appliance create', 'plan_name', help='the appliance plan name')
+register_cli_argument('appliance create', 'plan_product', help='the appliance plan product')
+register_cli_argument('appliance create', 'plan_publisher', help='the appliance plan publisher')
+register_cli_argument('appliance create', 'plan_version', help='the appliance plan version')
+register_cli_argument('appliance', 'resource_group_name', arg_type=resource_group_name_type, help='the resource group of the appliance')
+register_cli_argument('appliance create', 'managed_resource_group_id', help='the resource group managed by the appliance')

@@ -19,6 +19,10 @@ from azure.mgmt.resource.policy.models import (PolicyAssignment, PolicyDefinitio
 from azure.mgmt.resource.locks.models import ManagementLockObject
 from azure.mgmt.resource.links.models import ResourceLinkProperties
 
+from azure.mgmt.resource.appliances.models import Appliance
+from azure.mgmt.resource.appliances.models import ApplianceProperties
+from azure.mgmt.resource.appliances.models import Plan
+
 from azure.cli.core.parser import IncorrectUsageError
 from azure.cli.core.prompting import prompt, prompt_pass, prompt_t_f, prompt_choice_list, prompt_int
 from azure.cli.core.util import CLIError, get_file_json, shell_safe_json_parse
@@ -29,7 +33,8 @@ from azure.cli.core.commands.arm import is_valid_resource_id, parse_resource_id
 from ._client_factory import (_resource_client_factory,
                               _resource_policy_client_factory,
                               _resource_lock_client_factory,
-                              _resource_links_client_factory)
+                              _resource_links_client_factory,
+                              _resource_appliances_client_factory)
 
 logger = azlogging.get_az_logger(__name__)
 
@@ -63,6 +68,53 @@ def create_resource_group(rg_name, location, tags=None):
         tags=tags
     )
     return rcf.resource_groups.create_or_update(rg_name, parameters)
+
+def create_appliance(rg_name, appliance_name, managed_rg_id, location, plan_name, plan_product, plan_version, plan_publisher, tags=None):
+    ''' Create a new appliance.
+    :param str resource_group_name:the desired resource group name
+    :param str appliance_name:the appliance name
+    :param str tags:tags in 'a=b c' format
+    '''
+    racf = _resource_appliances_client_factory()
+    appliancePlan = Plan(plan_name, plan_publisher, plan_product, plan_version)
+    applianceProperties = ApplianceProperties(managed_rg_id)
+
+    parameters = Appliance(
+        location=location,
+        properties=applianceProperties,
+        kind="test",
+        managed_by=managed_rg_id,
+        plan=appliancePlan,
+        tags=tags
+    )
+    return racf.appliances.create_or_update(rg_name, appliance_name, parameters)
+
+def update_appliance(rg_name, location, tags=None):
+    ''' Updates an existing appliance.
+    :param str resource_group_name:the desired resource group name
+    :param str location:the resource group location
+    :param str tags:tags in 'a=b c' format
+    '''
+    rcf = _resource_client_factory()
+
+    parameters = ResourceGroup(
+        location=location,
+        tags=tags
+    )
+    return rcf.resource_groups.create_or_update(rg_name, parameters)
+
+def list_appliances(resource_group_name=None, resource_provider_namespace=None,
+                   resource_type=None, name=None, tag=None, location=None):
+    rcf = _resource_client_factory()
+
+    if resource_group_name is not None:
+        rcf.resource_groups.get(resource_group_name)
+
+    odata_filter = _list_resources_odata_filter_builder(resource_group_name,
+                                                        resource_provider_namespace,
+                                                        resource_type, name, tag, location)
+    resources = rcf.resources.list(filter=odata_filter)
+    return list(resources)
 
 def export_group_as_template(
         resource_group_name, include_comments=False, include_parameter_default_value=False):
