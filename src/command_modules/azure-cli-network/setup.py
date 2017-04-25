@@ -8,7 +8,7 @@
 from codecs import open
 from setuptools import setup
 
-VERSION = '2.0.2+dev'
+VERSION = '2.0.3+dev'
 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
@@ -25,7 +25,7 @@ CLASSIFIERS = [
 ]
 
 DEPENDENCIES = [
-    'azure-mgmt-network==0.30.0',
+    'azure-mgmt-network==1.0.0rc2',
     'azure-mgmt-trafficmanager==0.30.0rc6',
     'azure-mgmt-dns==1.0.0',
     'azure-mgmt-resource==1.0.0rc1',

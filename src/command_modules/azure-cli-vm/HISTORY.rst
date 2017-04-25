@@ -2,7 +2,11 @@
 
 Release History
 ===============
-2.0.3 (unreleased)
+2.0.4 (unreleased)
+++++++++++++++++++
+* vm/vmss: improve the warning text when generates ssh key pairs
+
+2.0.3 (2017-04-17)
 ++++++++++++++++++
 * vm/vmss: support create from a market place image which requires plan info(#1209)
 * Fix bug with `vmss update` and `vm availability-set update`

@@ -6,8 +6,14 @@ Release History
 unreleased
 ++++++++++++++++++
 
+* Default location to resource group location for `storage account create`.
+
+2.0.3 (2017-04-17)
+++++++++++++++++++
+
 * Add support for incremental blob copy
 * Add support for large block blob upload
+* Change block size to 100MB when file to upload is larger than 200GB
 
 2.0.2 (2017-04-03)
 ++++++++++++++++++

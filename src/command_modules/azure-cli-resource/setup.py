@@ -8,7 +8,7 @@
 from codecs import open
 from setuptools import setup
 
-VERSION = '2.0.2+dev'
+VERSION = '2.0.3+dev'
 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
@@ -27,6 +27,7 @@ CLASSIFIERS = [
 DEPENDENCIES = [
     'azure-mgmt-resource==1.0.0rc1',
     'azure-cli-core',
+    'azure-mgmt-authorization==0.30.0rc6'
 ]
 
 with open('README.rst', 'r', encoding='utf-8') as f:

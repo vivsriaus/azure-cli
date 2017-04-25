@@ -3,6 +3,19 @@
 Release History
 ===============
 
+unreleased
+++++++++++++++++++++
+
+* BC: Remove --expires and --not-before from `keyvault certificate create` as these parameters are not supported by the service.
+* Adds the --validity parameter to `keyvault certificate create` to selectively override the value in --policy
+* Fixes issue in `keyvault certificate get-default-policy` where 'expires' and 'not_before' were exposed but 'validity_in_months' was not.
+
+2.0.1 (2017-04-17)
+++++++++++++++++++++
+
+* keyvault fix for import of pem and pfx (#2754)
+* Apply core changes required for API profile support (#2834) & JSON string parsing from shell (#2705)
+
 2.0.0 (2017-04-03)
 ++++++++++++++++++++
 

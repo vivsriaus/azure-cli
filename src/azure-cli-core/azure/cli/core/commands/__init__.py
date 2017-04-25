@@ -8,12 +8,13 @@ from __future__ import print_function
 import json
 import pkgutil
 import re
+import sys
 import time
 import timeit
 import traceback
 from collections import OrderedDict, defaultdict
 from importlib import import_module
-from six import string_types
+from six import string_types, reraise
 
 import azure.cli.core.azlogging as azlogging
 import azure.cli.core.telemetry as telemetry
@@ -21,6 +22,8 @@ from azure.cli.core.util import CLIError
 from azure.cli.core.application import APPLICATION
 from azure.cli.core.prompting import prompt_y_n, NoTTYException
 from azure.cli.core._config import az_config, DEFAULTS_SECTION
+from azure.cli.core.profiles import ResourceType
+from azure.cli.core.profiles._shared import get_versioned_sdk_path
 
 from ._introspection import (extract_args_from_signature,
                              extract_full_summary_from_signature)
@@ -326,6 +329,13 @@ def cli_command(module_name, name, operation,
 
 def get_op_handler(operation):
     """ Import and load the operation handler """
+    # Patch the unversioned sdk path to include the appropriate API version for the
+    # resource type in question.
+    from azure.cli.core._profile import CLOUD
+    for rt in ResourceType:
+        if operation.startswith(rt.import_prefix):
+            operation = operation.replace(rt.import_prefix,
+                                          get_versioned_sdk_path(CLOUD.profile, rt))
     try:
         mod_to_import, attr_path = operation.split('#')
         op = import_module(mod_to_import)
@@ -391,7 +401,7 @@ def create_command(module_name, name, operation,
                 if exception_handler:
                     result = exception_handler(ex)
                 else:
-                    raise ex
+                    reraise(*sys.exc_info())
 
             if no_wait_param and kwargs.get(no_wait_param, None):
                 return None  # return None for 'no-wait'
