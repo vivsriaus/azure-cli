@@ -8,6 +8,7 @@ from argcomplete.completers import FilesCompleter
 
 from azure.mgmt.resource.resources.models import DeploymentMode
 from azure.mgmt.resource.locks.models import LockLevel
+from azure.mgmt.resource.appliances.models import ApplianceLockLevel
 from azure.cli.core.commands import register_cli_argument, CliArgumentType
 from azure.cli.core.commands.parameters import (ignore_type, resource_group_name_type, tag_type,
                                                 tags_type, get_resource_group_completion_list,
@@ -92,9 +93,10 @@ register_cli_argument('appliance create', 'rg_name', help='name of the resource 
 register_cli_argument('appliance create', 'name', options_list=('--name', '-n'), help='name of the new appliance', completer=None)
 register_cli_argument('appliance create', 'managed_rg_id', help='the resource group managed by the appliance')
 register_cli_argument('appliance create', 'location', help='the appliance location')
-register_cli_argument('appliance create', 'plan_name', help='the appliance plan name')
-register_cli_argument('appliance create', 'plan_product', help='the appliance plan product')
-register_cli_argument('appliance create', 'plan_publisher', help='the appliance plan publisher')
-register_cli_argument('appliance create', 'plan_version', help='the appliance plan version')
 register_cli_argument('appliance', 'resource_group_name', arg_type=resource_group_name_type, help='the resource group of the appliance')
 register_cli_argument('appliance create', 'managed_resource_group_id', help='the resource group managed by the appliance')
+register_cli_argument('appliance create', 'parameters', help='JSON formatted string or a path to a file with such content', type=file_type)
+register_cli_argument('appliance definition create', 'lock_level', **enum_choice_list(ApplianceLockLevel))
+register_cli_argument('appliance definition create', 'authorizations', nargs='+', help="space separated authorization pairs in a format of <principalId>:<roleDefinitionId>")
+register_cli_argument('appliance definition', 'appliance_definition_name', options_list=('--name', '-n'))
+register_cli_argument('appliance', 'appliance_name', options_list=('--name', '-n'))

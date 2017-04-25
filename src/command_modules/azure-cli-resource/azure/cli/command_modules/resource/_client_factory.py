@@ -63,5 +63,5 @@ def cf_management_locks(_):
 def cf_resource_links():
     return _resource_links_client_factory().resource_links
 
-def cf_resource_appliances():
-    return _resource_appliances_client_factory().resource_appliances
+def cf_resource_appliances(_):
+    return _resource_appliances_client_factory().appliances
