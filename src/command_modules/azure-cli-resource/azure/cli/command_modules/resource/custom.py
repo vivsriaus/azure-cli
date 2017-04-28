@@ -121,7 +121,7 @@ def show_appliance(rg_name=None, appliance_name=None, appliance_id=None):
     if appliance_id:
         appliance = racf.appliances.get_by_id(appliance_id)
     else:
-        appliance = racf.appliances.get(rg_name,appliance_name)
+        appliance = racf.appliances.get(rg_name, appliance_name)
     return appliance
 
 def create_appliancedefinition(rg_name, appliance_definition_name, location, lock_level, package_file_uri, authorizations, description, display_name, tags=None):
@@ -138,14 +138,8 @@ def create_appliancedefinition(rg_name, appliance_definition_name, location, loc
     for name_value in authorizations:
         # split at the first ':', both principalId and roldeDefinitionId should not have a ':'
         principalId, roleDefinitionId = name_value.split(':', 1)
-        #print('>>>>>>>principalId: {}'.format(principalId))
-        #print('>>>>>>>roleDefinitionId: {}'.format(roleDefinitionId))
-
         applianceAuth1 = ApplianceProviderAuthorization(principalId, roleDefinitionId)
         applianceAuth.append(applianceAuth1)
-    #applianceAuth1 = ApplianceProviderAuthorization("d5d74787-be93-4a54-baae-e9ed29bfe353","8e3af657-a8ff-443c-a75c-2fe8c4bcb635")
-    #applianceAuth = [applianceAuth1]
-    #applianceDefProperties = ApplianceDefinitionProperties(ApplianceLockLevel.can_not_delete, applianceAuth, package_file_uri, display_name, None, description)
     applianceDefProperties = ApplianceDefinitionProperties(lock_level, applianceAuth, package_file_uri, display_name, None, description)
 
     parameters = ApplianceDefinition(
@@ -155,7 +149,7 @@ def create_appliancedefinition(rg_name, appliance_definition_name, location, loc
     )
     return racf.appliance_definitions.create_or_update(rg_name, appliance_definition_name, parameters)
 
-def update_appliance(rg_name, location, tags=None):
+def update_appliance(rg_name, appliance_name, managed_rg_id, location, kind, appliance_definition_id=None, plan_name=None, plan_publisher=None, plan_product=None, plan_version=None, tags=None, parameters=None):
     ''' Updates an existing appliance.
     :param str resource_group_name:the desired resource group name
     :param str location:the resource group location
