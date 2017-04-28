@@ -106,3 +106,4 @@ register_cli_argument('appliance definition create', 'lock_level', **enum_choice
 register_cli_argument('appliance definition create', 'authorizations', nargs='+', help="space separated authorization pairs in a format of <principalId>:<roleDefinitionId>")
 register_cli_argument('appliance definition', 'appliance_definition_name', options_list=('--name', '-n'))
 register_cli_argument('appliance', 'appliance_name', options_list=('--name', '-n'))
+register_cli_argument('appliance', 'appliance_id', options_list=('--id',), help='The appliance resource ID')

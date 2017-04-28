@@ -126,7 +126,7 @@ cli_command(__name__, 'resource link update', 'azure.cli.command_modules.resourc
 
 cli_command(__name__, 'appliance create', 'azure.cli.command_modules.resource.custom#create_appliance')
 cli_command(__name__, 'appliance delete', 'azure.mgmt.resource.appliances.operations#AppliancesOperations.delete', cf_resource_appliances)
-cli_command(__name__, 'appliance show', 'azure.mgmt.resource.appliances.operations#AppliancesOperations.get', cf_resource_appliances, exception_handler=empty_on_404)
+cli_command(__name__, 'appliance show', 'azure.cli.command_modules.resource.custom#show_appliance', exception_handler=empty_on_404)
 cli_command(__name__, 'appliance list', 'azure.cli.command_modules.resource.custom#list_appliances')
 cli_command(__name__, 'appliance update', 'azure.cli.command_modules.resource.custom#update_appliance')
 

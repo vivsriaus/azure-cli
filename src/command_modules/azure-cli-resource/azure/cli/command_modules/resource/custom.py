@@ -17,6 +17,7 @@ from azure.mgmt.resource.locks.models import ManagementLockObject
 from azure.mgmt.resource.links.models import ResourceLinkProperties
 
 from azure.mgmt.resource.appliances.models import Appliance
+from azure.mgmt.resource.appliances.models import Plan
 from azure.mgmt.resource.appliances.models import ApplianceProperties
 from azure.mgmt.resource.appliances.models import ApplianceDefinition
 from azure.mgmt.resource.appliances.models import ApplianceDefinitionProperties
@@ -36,7 +37,6 @@ from ._client_factory import (_resource_client_factory,
                               _resource_policy_client_factory,
                               _resource_lock_client_factory,
                               _resource_links_client_factory,
-                              authorization_management_client,
                               _resource_appliances_client_factory)
 
 logger = azlogging.get_az_logger(__name__)
@@ -73,14 +73,33 @@ def create_resource_group(rg_name, location, tags=None):
     )
     return rcf.resource_groups.create_or_update(rg_name, parameters)
 
-def create_appliance(rg_name, appliance_name, managed_rg_id, location, appliance_definition_id, tags=None, parameters=None):
+def create_appliance(rg_name, appliance_name, managed_rg_id, location, kind, appliance_definition_id=None, plan_name=None, plan_publisher=None, plan_product=None, plan_version=None, tags=None, parameters=None):
     ''' Create a new appliance.
     :param str resource_group_name:the desired resource group name
     :param str appliance_name:the appliance name
     :param str tags:tags in 'a=b c' format
     '''
     racf = _resource_appliances_client_factory()
-    applianceProperties = ApplianceProperties(managed_rg_id, appliance_definition_id)
+    applianceProperties = ApplianceProperties(managed_rg_id)
+    appliance = Appliance(
+        location=location,
+        properties=applianceProperties,
+        kind=kind,
+        tags=tags
+    )
+
+    if kind.lower() == 'servicecatalog':
+        if appliance_definition_id:
+            applianceProperties = ApplianceProperties(managed_rg_id, appliance_definition_id)
+        else:
+            raise CLIError('--appliance-definition-id is required if kind is ServiceCatalog')
+    elif kind.lower() == 'marketplace':
+        if plan_name is None and plan_product is None and plan_publisher is None and plan_version is None:
+            raise CLIError('--plan-name, --plan-product, --plan-publisher and --plan-version are all required if kind is ServiceCatalog')
+        else:
+            appliancePlan = Plan(plan_name, plan_publisher, plan_product, plan_version)
+            appliance.plan = appliancePlan
+
     applianceParameters = None
 
     if parameters:
@@ -90,13 +109,20 @@ def create_appliance(rg_name, appliance_name, managed_rg_id, location, appliance
             applianceParameters = shell_safe_json_parse(parameters)
 
     applianceProperties.parameters = applianceParameters
-    parameters = Appliance(
-        location=location,
-        properties=applianceProperties,
-        kind="ServiceCatalog",
-        tags=tags
-    )
-    return racf.appliances.create_or_update(rg_name, appliance_name, parameters)
+
+    return racf.appliances.create_or_update(rg_name, appliance_name, appliance)
+
+def show_appliance(rg_name=None, appliance_name=None, appliance_id=None):
+    ''' Gets an appliance.
+    :param str resource_group_name:the resource group name
+    :param str appliance_name:the appliance name
+    '''
+    racf = _resource_appliances_client_factory()
+    if appliance_id:
+        appliance = racf.appliances.get_by_id(appliance_id)
+    else:
+        appliance = racf.appliances.get(rg_name,appliance_name)
+    return appliance
 
 def create_appliancedefinition(rg_name, appliance_definition_name, location, lock_level, package_file_uri, authorizations, description, display_name, tags=None):
     ''' Create a new appliance definition.
