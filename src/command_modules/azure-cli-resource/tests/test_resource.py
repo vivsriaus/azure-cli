@@ -493,5 +493,38 @@ class PolicyScenarioTest(ResourceGroupVCRTestBase):
         self.cmd('policy definition list', checks=[
             JMESPathCheck("length([?name=='{}'])".format(policy_name), 0)])
 
+class ApplianceDefinitionScenarioTest(ResourceGroupVCRTestBase):
+
+    def __init__(self, test_method):
+        super(ApplianceDefinitionScenarioTest, self).__init__(__file__, test_method, resource_group='azure-cli-appliance-def-test-group')
+
+    def test_resource_appliance_def(self):
+        self.execute()
+
+    def body(self):
+        appdef_name = 'azure-cli-test-appdef'
+        appdef_display_name = 'test_appdef_123'
+        appdef_description = 'test_appdef_123'
+        packageUri = 'https://wud.blob.core.windows.net/appliance/SingleStorageAccount.zip'
+        location = 'brazil'
+        auth = '5e91139a-c94b-462e-a6ff-1ee95e8aac07:8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
+        lock = 'None'
+        #create an appliance definition
+        self.cmd('appliance definition create -n {} --package-file-uri {} --display-name {} --description {} -l {} -a {} --lock-level {} -g {}'.format(
+            appdef_name, packageUri, appdef_display_name, appdef_description, location, auth, lock, self.resource_group), checks=[
+                JMESPathCheck('name', appdef_name),
+                JMESPathCheck('displayName', appdef_display_name),
+                JMESPathCheck('description', appdef_description)
+                ])
+
+        #list and show it
+        self.cmd('appliance definition list -g {}'.format(self.resource_group), checks=[
+            JMESPathCheck("length([?name=='{}'])".format(appdef_name), 1)
+            ])
+        self.cmd('appliance definition show -n {} -g {}'.format(appdef_name, self.resource_group), checks=[
+            JMESPathCheck('name', appdef_name),
+            JMESPathCheck('displayName', appdef_display_name)
+            ])
+
 if __name__ == '__main__':
     unittest.main()
