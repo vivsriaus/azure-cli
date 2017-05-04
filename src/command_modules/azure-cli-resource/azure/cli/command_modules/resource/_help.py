@@ -6,6 +6,14 @@
 from azure.cli.core.help_files import helps  # pylint: disable=unused-import
 
 # pylint: disable=line-too-long, too-many-lines
+helps['managedapp'] = """
+    type: group
+    short-summary: Manage managed applications and managed application definitions.
+"""
+helps['managedapp definition'] = """
+    type: group
+    short-summary: Manage managed application definitions.
+"""
 helps['managedapp create'] = """
     type: command
     short-summary: Creates a managed application.
@@ -15,7 +23,7 @@ helps['managedapp create'] = """
             az managedapp create -g MyResourceGroup -n MyManagedApp -l westcentralus --kind ServiceCatalog -m "/subscriptions/0b1f6471-1bf0-4dda-aec3-111111111111/resourceGroups/myManagedRG" -d "/subscriptions/0b1f6471-1bf0-4dda-aec3-111111111111/resourceGroups/MyResourceGroup/providers/Microsoft.Solutions/applianceDefinitions/myManagedAppDef"
         - name: Create a managed application of kind 'MarketPlace'. This requires a valid plan, containing details about existing marketplace package like plan name, version, publisher and product
           text: >
-            az managedapp create -g MyResourceGroup -n MyManagedApp -l westcentralus --kind MarketPlace -m "/subscriptions/0b1f6471-1bf0-4dda-aec3-111111111111/resourceGroups/myManagedRG" -plan-name DatabricksAppliance --plan-version "1.0" --plan-product "databricks-appliance" --plan-publisher Microsoft
+            az managedapp create -g MyResourceGroup -n MyManagedApp -l westcentralus --kind MarketPlace -m "/subscriptions/0b1f6471-1bf0-4dda-aec3-111111111111/resourceGroups/myManagedRG" -plan-name ContosoAppliance --plan-version "1.0" --plan-product "contoso-appliance" --plan-publisher Contoso
 """
 helps['managedapp definition create'] = """
     type: command
