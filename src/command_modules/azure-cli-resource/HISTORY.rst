@@ -3,6 +3,10 @@
 Release History
 ===============
 
+2.0.5 (2017-05-05)
+++++++++++++++++++
+* Add managedapp and managedapp definition commands (#2985)
+
 2.0.4 (2017-04-28)
 ++++++++++++++++++
 * Support 'provider operation' commands (#2908)

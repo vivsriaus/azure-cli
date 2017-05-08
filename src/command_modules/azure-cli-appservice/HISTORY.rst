@@ -2,7 +2,8 @@
 
 Release History
 ===============
-0.1.5 (unreleased)
+
+0.1.5 (2017-05-05)
 ++++++++++++++++++++
 * functionapp: add full functionapp supports, including create, show, list, delete, hostname, ssl, etc
 * Adding Team Services (vsts) as a continuous delivery option to "appservice web source-control config"
@@ -10,6 +11,7 @@ Release History
 * Expose arguments to configure deployment and "runtime stacks" on webapp create
 * Expose "webapp list-runtimes"
 * support configure connection strings (#2647)
+* support slot swap with preview
 
 0.1.4 (2017-04-28)
 ++++++++++++++++++++

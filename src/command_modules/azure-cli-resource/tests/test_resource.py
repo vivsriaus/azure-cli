@@ -6,13 +6,13 @@
 import os
 import time
 import unittest
-# AZURE CLI RESOURCE TEST DEFINITIONS
-from azure.cli.core.test_utils.vcr_test_base import (VCRTestBase, JMESPathCheck, NoneCheck,
-                                                     BooleanCheck,
-                                                     ResourceGroupVCRTestBase,
-                                                     MOCKED_SUBSCRIPTION_ID)
 
 from azure.cli.testsdk import (ScenarioTest, ResourceGroupPreparer, JMESPathCheck as JCheck)
+# AZURE CLI RESOURCE TEST DEFINITIONS
+from azure.cli.testsdk.vcr_test_base import (VCRTestBase, JMESPathCheck, NoneCheck,
+                                             BooleanCheck,
+                                             ResourceGroupVCRTestBase,
+                                             MOCKED_SUBSCRIPTION_ID)
 
 
 # pylint: disable=method-hidden
@@ -650,6 +650,10 @@ class ManagedAppScenarioTest(ScenarioTest):
             JCheck('managedResourceGroupId', managedrg),
             JCheck('applianceDefinitionId', managedappdef['id'])
         ])
+
+        # delete
+        self.cmd('managedapp delete -g {} -n {}'.format(resource_group, managedapp_name))
+        self.cmd('managedapp list -g {}'.format(resource_group), checks=NoneCheck())
 
 
 if __name__ == '__main__':
